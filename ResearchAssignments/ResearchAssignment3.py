@@ -59,10 +59,10 @@ class TotalMass:
         self.y_MW = self.data_MW['y']*u.kpc
         self.z_MW = self.data_NW['z']*u.kpc
         #Adding arrays to get MW and M31 merger
-        self.M_MW_M31 = np.add(self.M_31,self.M_MW)
-        self.x_MW_M31 = np.add(self.x_MW,self.x_31)
-        self.y_MW_M31 = np.add(self.y_MW,self.y_31)
-        self.z_MW_M31 = np.add(self.z_MW,self.z_31)
+        self.M_MW_M31 = np.append(self.M_31,self.M_MW)
+        self.x_MW_M31 = np.append(self.x_MW,self.x_31)
+        self.y_MW_M31 = np.append(self.y_MW,self.y_31)
+        self.z_MW_M31 = np.append(self.z_MW,self.z_31)
     def Massenclosed(self, ptype):
         com = CenterOfMass("M31_000.txt",2)
         com_pos = com.COM_P(0.1)
@@ -78,9 +78,9 @@ class TotalMass:
         #Let radii increase by 0.01kpc every iteration (delta r) from 0.05 kpc
         #to 60 kpc. Thus giving a small change instead of taking the whole 
         #radius.
-        radii = np.arange(0.05,60,5995)
-        for i in range(len(radii)):
-            indexR = np.where(rG <  radii[i]*u.kpc)
+        radii = np.linspace(0.05,60,200)
+        for i in range(len(radii))[:-1]:
+            indexR = np.where(rG >= radii[i]*u.kpc & rG <= radii[i+1])
             m_enc[i] = np.sum(mG[indexR])
             i+=1
         return m_enc*u.Msun*1e10
